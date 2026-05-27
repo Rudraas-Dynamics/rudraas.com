@@ -1,0 +1,98 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Rudraas Dynamics Brand Colors */
+  --background: #050912;
+  --foreground: #F2EFE6;
+  --card: #0a1019;
+  --card-foreground: #F2EFE6;
+  --popover: #0a1019;
+  --popover-foreground: #F2EFE6;
+  --primary: #F2EFE6;
+  --primary-foreground: #050912;
+  --secondary: #1a2233;
+  --secondary-foreground: #F2EFE6;
+  --muted: #1a2233;
+  --muted-foreground: #6A6E78;
+  --accent: #D5D6D8;
+  --accent-foreground: #050912;
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: #1a2233;
+  --input: #1a2233;
+  --ring: #D5D6D8;
+  --radius: 0.25rem;
+  
+  /* Rudraas specific colors */
+  --rudraas-navy: #263a5c;
+  --rudraas-dark-navy: #1e2d47;
+  --rudraas-platinum: #D5D6D8;
+  --rudraas-bone: #F2EFE6;
+  --rudraas-dark: #050912;
+  --rudraas-slate: #6A6E78;
+}
+
+@theme inline {
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), 'JetBrains Mono', monospace;
+  --font-display: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 2px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom scrollbar for the defense tech aesthetic */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--rudraas-slate);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rudraas-platinum);
+}
+
+/* Selection color */
+::selection {
+  background: var(--rudraas-navy);
+  color: var(--rudraas-bone);
+}
