@@ -35,7 +35,7 @@ export function Doctrine() {
         </span>
         
         <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-20 max-w-4xl leading-tight">
-          We do not build a product.<br />We build a posture.
+          We do not build a product.<br />We build a defence posture.
         </h2>
 
         {/* Principles Grid */}

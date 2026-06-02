@@ -47,8 +47,8 @@ export function Capabilities() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = entry.target.getAttribute('data-id')
-            if (id && !visibleItems.includes(id)) {
-              setVisibleItems((prev) => [...prev, id])
+            if (id) {
+              setVisibleItems((prev) => prev.includes(id) ? prev : [...prev, id])
             }
           }
         })
@@ -60,7 +60,7 @@ export function Capabilities() {
     items?.forEach((item) => observer.observe(item))
 
     return () => observer.disconnect()
-  }, [visibleItems])
+  }, [])
 
   return (
     <section id="capability" ref={sectionRef} className="relative py-32 bg-[#050912]">
@@ -95,7 +95,7 @@ export function Capabilities() {
 
               {/* Icon placeholder */}
               <div className="w-12 h-12 mb-6 flex items-center justify-center">
-                <svg className="w-10 h-10 text-[#D5D6D8]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1">
+                <svg aria-hidden="true" className="w-10 h-10 text-[#D5D6D8]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="1">
                   <polygon points="24,4 44,14 44,34 24,44 4,34 4,14" />
                   <line x1="24" y1="4" x2="24" y2="44" />
                   <line x1="4" y1="14" x2="44" y2="34" />

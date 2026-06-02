@@ -5,10 +5,12 @@ import Image from 'next/image'
 
 export function Contact() {
   const [email, setEmail] = useState('')
+  const [submitted, setSubmitted] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('Brief requested:', email)
+    window.location.href = `mailto:info@rudraas.com?subject=Brief%20Request&body=From%3A%20${encodeURIComponent(email)}`
+    setSubmitted(true)
   }
 
   const channels = [
@@ -26,7 +28,7 @@ export function Contact() {
             <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block">
               // 006 — BRIEF REQUEST
             </span>
-            
+
             <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-12 leading-tight">
               Operational.<br />Disciplined.<br />Confidential.
             </h2>
@@ -36,33 +38,39 @@ export function Contact() {
               <label htmlFor="channel" className="block font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-3">
                 // CHANNEL
               </label>
-              <div className="flex gap-0">
-                <input
-                  type="email"
-                  id="channel"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your-email@organization.com"
-                  className="flex-1 bg-transparent border border-[#2a3344] border-r-0 px-4 py-4 text-[#F2EFE6] placeholder:text-[#6A6E78] focus:border-[#D5D6D8] focus:outline-none transition-colors"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm font-medium tracking-widest uppercase hover:bg-[#D5D6D8] transition-colors whitespace-nowrap"
-                >
-                  TRANSMIT →
-                </button>
-              </div>
+              {submitted ? (
+                <p className="text-[#D5D6D8] font-mono text-sm tracking-wider py-4">
+                  // TRANSMISSION SENT — WE WILL RESPOND.
+                </p>
+              ) : (
+                <div className="flex gap-0">
+                  <input
+                    type="email"
+                    id="channel"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your-email@organization.com"
+                    className="flex-1 bg-transparent border border-[#2a3344] border-r-0 px-4 py-4 text-[#F2EFE6] placeholder:text-[#6A6E78] focus:border-[#D5D6D8] focus:outline-none transition-colors"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    className="px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm font-medium tracking-widest uppercase hover:bg-[#D5D6D8] transition-colors whitespace-nowrap"
+                  >
+                    TRANSMIT →
+                  </button>
+                </div>
+              )}
             </form>
 
             {/* Channels */}
-            <div className="grid sm:grid-cols-3 gap-6">
+            <address className="not-italic grid sm:grid-cols-3 gap-6">
               {channels.map((channel) => (
                 <div key={channel.label} className="border-l border-[#2a3344] pl-4">
                   <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">
                     // {channel.label}
                   </span>
-                  <a 
+                  <a
                     href={`mailto:${channel.value}`}
                     className="text-sm text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors"
                   >
@@ -70,10 +78,10 @@ export function Contact() {
                   </a>
                 </div>
               ))}
-            </div>
+            </address>
           </div>
 
-          {/* Right content - Empty for now, could add map or imagery */}
+          {/* Right content */}
           <div className="hidden lg:flex items-center justify-center">
             <div className="relative w-64 h-64 opacity-20">
               <Image
@@ -100,9 +108,9 @@ export function Footer() {
 
   const channels = [
     { label: 'BRIEF', href: '#contact' },
-    { label: 'GOVERNMENT', href: 'mailto:mod@rudraas.in' },
-    { label: 'CAPITAL', href: 'mailto:capital@rudraas.in' },
-    { label: 'PRESS', href: 'mailto:press@rudraas.in' },
+    { label: 'GOVERNMENT', href: 'mailto:ks@rudraas.com' },
+    { label: 'CAPITAL', href: 'mailto:msu@rudraas.com' },
+    { label: 'PRESS', href: 'mailto:info@rudraas.com' },
   ]
 
   return (
@@ -129,14 +137,14 @@ export function Footer() {
           </div>
 
           {/* Surfaces */}
-          <div>
+          <nav aria-label="Site sections">
             <h4 className="font-mono text-xs tracking-wider text-[#F2EFE6] uppercase mb-4 font-medium">
               SURFACES
             </h4>
             <ul className="space-y-2">
               {surfaces.map((item) => (
                 <li key={item.label}>
-                  <a 
+                  <a
                     href={item.href}
                     className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
                   >
@@ -145,17 +153,17 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Channels */}
-          <div>
+          <nav aria-label="Contact channels">
             <h4 className="font-mono text-xs tracking-wider text-[#F2EFE6] uppercase mb-4 font-medium">
               CHANNELS
             </h4>
             <ul className="space-y-2">
               {channels.map((item) => (
                 <li key={item.label}>
-                  <a 
+                  <a
                     href={item.href}
                     className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
                   >
@@ -164,7 +172,7 @@ export function Footer() {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
         </div>
 
         {/* Bottom bar */}

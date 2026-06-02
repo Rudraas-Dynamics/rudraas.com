@@ -1,26 +1,62 @@
-export function Careers() {
-  const roles = [
-    'AUTONOMY',
-    'PERCEPTION',
-    'EMBEDDED',
-    'AERODYNAMICS',
-    'ML SYSTEMS',
-    'OSINT',
-    'COMMS SECURITY',
-    'MISSION OPS',
-    'HARDWARE-IN-THE-LOOP',
-    'MANUFACTURING',
-  ]
+const roles = [
+  'AUTONOMY',
+  'PERCEPTION',
+  'EMBEDDED',
+  'AERODYNAMICS',
+  'ML SYSTEMS',
+  'OSINT',
+  'COMMS SECURITY',
+  'MISSION OPS',
+  'HARDWARE-IN-THE-LOOP',
+  'MANUFACTURING',
+]
 
+const jobPostingSchema = {
+  '@context': 'https://schema.org',
+  '@graph': roles.map((role) => ({
+    '@type': 'JobPosting',
+    title: `${role} Engineer — Rudraas Dynamics`,
+    datePosted: '2026-01-01',
+    validThrough: '2026-12-31',
+    description: `Open position at Rudraas Dynamics for ${role} specialists in sovereign Indian defence technology. We build AI autonomy, unmanned platforms, and counter-UAS systems for the Indo-Pacific. Send work, not a resume.`,
+    employmentType: 'FULL_TIME',
+    industry: 'Defence Technology',
+    hiringOrganization: {
+      '@type': 'Organization',
+      name: 'Rudraas Dynamics',
+      sameAs: 'https://rudraas.com',
+      logo: 'https://rudraas.com/images/rudraas-emblem.png',
+    },
+    jobLocation: {
+      '@type': 'Place',
+      address: {
+        '@type': 'PostalAddress',
+        addressLocality: 'New Delhi',
+        addressRegion: 'Delhi',
+        addressCountry: 'IN',
+      },
+    },
+    applicantLocationRequirements: {
+      '@type': 'Country',
+      name: 'India',
+    },
+  })),
+}
+
+export function Careers() {
   return (
     <section id="careers" className="relative py-32 bg-[#050912]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+      />
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block">
           // 005 — RECRUITING
         </span>
-        
+
         <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-8 max-w-4xl leading-tight">
-          We are hiring engineers,<br />operators, and signal.
+          We are hiring defence engineers,<br />operators, and signal.
         </h2>
 
         <p className="text-2xl md:text-3xl font-light text-[#D5D6D8] mb-8 max-w-2xl">

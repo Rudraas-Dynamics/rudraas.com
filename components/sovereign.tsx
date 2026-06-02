@@ -14,7 +14,7 @@ export function Sovereign() {
         </span>
         
         <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-8 max-w-4xl leading-tight">
-          Indian by construction.<br />Allied-grade by design.
+          Indian defence technology,<br />by construction. Allied-grade by design.
         </h2>
 
         <p className="text-2xl md:text-3xl font-light text-[#D5D6D8] mb-12 max-w-2xl">

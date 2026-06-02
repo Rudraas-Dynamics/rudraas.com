@@ -11,7 +11,7 @@ export function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#050912]">
+    <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#050912]">
       {/* Corner brackets */}
       <div className="absolute inset-0 pointer-events-none">
         <svg className="absolute top-8 left-8 w-8 h-8 text-[#D5D6D8]" viewBox="0 0 48 48" fill="none" stroke="currentColor" strokeWidth="2">
@@ -62,6 +62,7 @@ export function Hero() {
 
         {/* Main Headline - LARGE */}
         <h1 className="font-[family-name:var(--font-space-grotesk)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-tight text-[#F2EFE6] mb-6 leading-[0.95]">
+          <span className="sr-only">Rudraas Dynamics — India&apos;s Sovereign Defence Technology Company. AI Autonomy, Unmanned Systems &amp; Counter-UAS for the Indo-Pacific. </span>
           Engineered //<br />
           Dominance.
         </h1>
