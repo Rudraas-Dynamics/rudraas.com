@@ -18,7 +18,7 @@ const jobPostingSchema = {
     title: `${role} Engineer — Rudraas Dynamics`,
     datePosted: '2026-01-01',
     validThrough: '2026-12-31',
-    description: `Open position at Rudraas Dynamics for ${role} specialists in sovereign Indian defence technology. We build AI autonomy, unmanned platforms, and counter-UAS systems for the Indo-Pacific. Send work, not a resume.`,
+    description: `Open position at Rudraas Dynamics for ${role} specialists. We build sovereign intelligence software, autonomous aerial platforms, and counter-UAS systems. Send relevant work, not a conventional resume.`,
     employmentType: 'FULL_TIME',
     industry: 'Defence Technology',
     hiringOrganization: {
@@ -51,24 +51,27 @@ export function Careers() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
       />
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block">
+        <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block rd-enter-1">
           // 005 — RECRUITING
         </span>
 
-        <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-8 max-w-4xl leading-tight">
-          We are hiring defence engineers,<br />operators, and signal.
+        <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-8 max-w-4xl leading-tight rd-enter-2">
+          We are hiring defence engineers,<br />operators, and intelligence specialists.
         </h2>
 
-        <p className="text-2xl md:text-3xl font-light text-[#D5D6D8] mb-8 max-w-2xl">
+        <p className="text-2xl md:text-3xl font-light text-[#D5D6D8] mb-8 max-w-2xl rd-enter-3">
           The noise we make is in the work.
         </p>
 
-        <div className="max-w-3xl space-y-6 mb-12">
+        <div className="max-w-3xl space-y-6 mb-12 rd-enter-4">
           <p className="text-[#D5D6D8] font-light leading-relaxed">
-            If you have shipped a flight controller, a perception stack, an EW package, an OSINT pipeline, or a mission-critical OS — and you want to ship it again, in a sovereign context, against the hardest theatre — speak to us.
+            If you have shipped a flight controller, perception stack, electronic warfare package, OSINT pipeline, secure communications system, or mission-critical autonomy software — and you want to build in a sovereign defence context — speak to us.
           </p>
           <p className="text-[#D5D6D8] font-light leading-relaxed">
-            We do not have a careers funnel. We have a dossier intake. Send work, not a resume.
+            We build inside the problem. Requirements come from operators and mission realities, not from a roadmap written in isolation.
+          </p>
+          <p className="text-[#D5D6D8] font-light leading-relaxed">
+            We do not need a conventional resume first. Send relevant work: systems, papers, repositories, prototypes, field experience, or prior deployment history.
           </p>
         </div>
 
@@ -86,10 +89,10 @@ export function Careers() {
 
         {/* CTA */}
         <a
-          href="#contact"
-          className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-all duration-300"
+          href="/contact"
+          className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-colors duration-200"
         >
-          SUBMIT A DOSSIER
+          SUBMIT WORK
           <span className="transition-transform group-hover:translate-x-1">→</span>
         </a>
       </div>

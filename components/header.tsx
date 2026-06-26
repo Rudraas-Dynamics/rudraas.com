@@ -17,11 +17,11 @@ export function Header() {
   }, [])
 
   const navItems = [
-    { label: 'Capability', href: '#capability' },
-    { label: 'Thesis', href: '#doctrine' },
-    { label: 'Sovereign', href: '#sovereign' },
-    { label: 'Careers', href: '#careers' },
-    { label: 'Brief', href: '#contact' },
+    { label: 'Capability', href: '/capabilities' },
+    { label: 'Mission', href: '/mission' },
+    { label: 'Sovereign', href: '/sovereign' },
+    { label: 'Careers', href: '/careers' },
+    { label: 'Brief', href: '/contact' },
   ]
 
   return (
@@ -51,7 +51,7 @@ export function Header() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="text-xs font-medium text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors tracking-widest uppercase"
+                className="rd-nav-link text-xs font-medium text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors duration-200 tracking-widest uppercase"
               >
                 {item.label}
               </Link>
@@ -60,12 +60,12 @@ export function Header() {
           </div>
 
           {/* Request Briefing Button */}
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className="hidden md:inline-flex items-center gap-2 px-5 py-2.5 border border-[#D5D6D8] text-[#F2EFE6] text-xs tracking-widest uppercase hover:bg-[#F2EFE6] hover:text-[#050912] transition-all duration-300"
           >
             REQUEST BRIEFING <span>→</span>
-          </a>
+          </Link>
 
           {/* Mobile Menu Button */}
           <button
@@ -96,13 +96,13 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
-            <a
-              href="#contact"
+            <Link
+              href="/contact"
               onClick={() => setMenuOpen(false)}
               className="inline-flex items-center gap-2 mt-4 px-5 py-2.5 border border-[#D5D6D8] text-[#F2EFE6] text-xs tracking-widest uppercase"
             >
               REQUEST BRIEFING →
-            </a>
+            </Link>
           </div>
         )}
       </nav>

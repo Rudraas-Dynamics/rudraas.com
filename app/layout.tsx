@@ -85,6 +85,7 @@ const websiteSchema = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://rudraas.com'),
   applicationName: 'Rudraas Dynamics',
   title: {
     default: 'Rudraas Dynamics | Indian Defence Technology & AI Autonomy',

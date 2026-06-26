@@ -1,10 +1,7 @@
 import { Header } from '@/components/header'
 import { Hero } from '@/components/hero'
-import { Doctrine } from '@/components/doctrine'
-import { Sovereign } from '@/components/sovereign'
-import { Capabilities } from '@/components/capabilities'
-import { Careers } from '@/components/careers'
-import { Contact, Footer } from '@/components/contact'
+import { HomeThesis, HomeRouteCards, HomeArgusTease, HomeEngineeredDominance, HomeBriefingCTA } from '@/components/home-routes'
+import { Footer } from '@/components/contact'
 
 const localBusinessSchema = {
   '@context': 'https://schema.org',
@@ -37,7 +34,6 @@ const localBusinessSchema = {
     'Counter-UAS Systems',
     'Defence Technology',
     'Autonomous Platforms',
-    'Electronic Warfare',
     'Mission Planning',
     'Perception Systems',
   ],
@@ -53,11 +49,11 @@ export default function Home() {
       />
       <Header />
       <Hero />
-      <Doctrine />
-      <Sovereign />
-      <Capabilities />
-      <Careers />
-      <Contact />
+      <HomeThesis />
+      <HomeEngineeredDominance />
+      <HomeRouteCards />
+      <HomeArgusTease />
+      <HomeBriefingCTA />
       <Footer />
     </main>
   )
