@@ -1,14 +1,6 @@
-'use client'
-
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 export function Hero() {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
 
   return (
     <section id="home" className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#050912]">
@@ -28,9 +20,9 @@ export function Hero() {
         </svg>
       </div>
 
-      {/* Grid overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.02]"
+      {/* Grid overlay — drifts very slowly */}
+      <div
+        className="absolute inset-0 opacity-[0.025] rd-grid-drift"
         style={{
           backgroundImage: `
             linear-gradient(to right, #D5D6D8 1px, transparent 1px),
@@ -41,16 +33,14 @@ export function Hero() {
       />
 
       {/* Main content */}
-      <div className={`relative z-10 flex flex-col items-center text-center px-6 transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div className="relative z-10 flex flex-col items-center text-center px-6">
         {/* Top Label */}
-        <div className="flex items-center gap-2 mb-6">
-          <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase">INDIA · 2026</span>
-          <span className="text-[#6A6E78]">·</span>
-          <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase">POSTURE STATEMENT</span>
+        <div className="flex items-center gap-2 mb-6 rd-enter-1">
+          <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase">AI-NATIVE DEFENCE TECHNOLOGY · INDIA</span>
         </div>
 
         {/* Emblem */}
-        <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 mb-8">
+        <div className="relative w-32 h-32 md:w-40 md:h-40 lg:w-48 lg:h-48 mb-8 rd-enter-2">
           <Image
             src="/images/rudraas-emblem.png"
             alt="Rudraas Dynamics Emblem"
@@ -61,40 +51,35 @@ export function Hero() {
         </div>
 
         {/* Main Headline - LARGE */}
-        <h1 className="font-[family-name:var(--font-space-grotesk)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-tight text-[#F2EFE6] mb-6 leading-[0.95]">
+        <h1 className="font-[family-name:var(--font-space-grotesk)] text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-medium tracking-tight text-[#F2EFE6] mb-6 leading-[0.95] rd-enter-3">
           <span className="sr-only">Rudraas Dynamics — India&apos;s Sovereign Defence Technology Company. AI Autonomy, Unmanned Systems &amp; Counter-UAS for the Indo-Pacific. </span>
-          Engineered //<br />
-          Dominance.
+          India&apos;s sovereign<br />autonomy stack.
         </h1>
 
         {/* Description */}
-        <p className="max-w-xl text-[#D5D6D8] text-base md:text-lg font-light leading-relaxed mb-10">
-          The sovereign Indian defence platform — built for the Indo-Pacific, ready for the allied world.
+        <p className="max-w-xl text-[#D5D6D8] text-base md:text-lg font-light leading-relaxed mb-10 rd-enter-4">
+          Autonomy, Sensing, and Uncrewed systems for contested environments.
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-12">
+        <div className="flex flex-col sm:flex-row items-center gap-4 mb-12 rd-enter-5">
           <a
-            href="#contact"
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-all duration-300"
+            href="/contact"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-colors duration-200"
           >
             REQUEST BRIEFING
-            <span className="transition-transform group-hover:translate-x-1">→</span>
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
           </a>
           <a
-            href="#doctrine"
-            className="text-sm tracking-widest text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors uppercase"
+            href="/capabilities"
+            className="text-sm tracking-widest text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors duration-200 uppercase"
           >
-            READ THE THESIS
+            VIEW CAPABILITY
           </a>
         </div>
 
         {/* Bottom Status Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] md:text-xs font-mono tracking-[0.15em] text-[#6A6E78] uppercase">
-          <span>CLASSIFIED · DISTRIBUTION CONTROLLED</span>
-          <span className="hidden sm:inline">//</span>
-          <span className="hidden sm:inline">R-DYN-WEB-26.05</span>
-          <span className="hidden sm:inline">//</span>
+        <div className="flex flex-wrap items-center justify-center gap-4 text-[10px] md:text-xs font-mono tracking-[0.15em] text-[#6A6E78] uppercase rd-enter-5">
           <span>NEW DELHI · INDIA</span>
         </div>
       </div>

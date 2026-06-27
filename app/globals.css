@@ -73,7 +73,13 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-normal;
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-space-grotesk), 'Space Grotesk', system-ui, sans-serif;
   }
 }
 
@@ -99,4 +105,71 @@ html {
 ::selection {
   background: var(--rudraas-navy);
   color: var(--rudraas-bone);
+}
+
+/* ─── Rudraas animation keyframes ─── */
+
+@keyframes rd-fade-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rd-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes rd-grid-drift {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+@keyframes rd-pulse-dot {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+@layer utilities {
+  /* Entrance utilities */
+  .rd-enter-1 { animation: rd-fade-up 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+  .rd-enter-2 { animation: rd-fade-up 0.5s cubic-bezier(0.16,1,0.3,1) 0.10s both; }
+  .rd-enter-3 { animation: rd-fade-up 0.5s cubic-bezier(0.16,1,0.3,1) 0.20s both; }
+  .rd-enter-4 { animation: rd-fade-up 0.5s cubic-bezier(0.16,1,0.3,1) 0.32s both; }
+  .rd-enter-5 { animation: rd-fade-up 0.5s cubic-bezier(0.16,1,0.3,1) 0.44s both; }
+
+  /* Grid drift — very slow, barely perceptible */
+  .rd-grid-drift {
+    animation: rd-grid-drift 30s linear infinite alternate;
+  }
+
+  /* ARGUS pulse dot */
+  .rd-pulse { animation: rd-pulse-dot 2.4s ease-in-out infinite; }
+
+  /* Nav underline slide */
+  .rd-nav-link {
+    position: relative;
+  }
+  .rd-nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #D5D6D8;
+    transition: width 0.25s cubic-bezier(0.16,1,0.3,1);
+  }
+  .rd-nav-link:hover::after { width: 100%; }
+
+  /* ─── Reduced motion: cut all animation to instant ─── */
+  @media (prefers-reduced-motion: reduce) {
+    .rd-enter-1, .rd-enter-2, .rd-enter-3, .rd-enter-4, .rd-enter-5 {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .rd-grid-drift { animation: none; }
+    .rd-pulse { animation: none; opacity: 0.6; }
+    .rd-nav-link::after { transition: none; }
+  }
 }

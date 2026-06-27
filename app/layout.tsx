@@ -46,7 +46,6 @@ const organizationSchema = {
     'Counter-UAS',
     'Defence Technology',
     'Autonomous Systems',
-    'Electronic Warfare',
     'Mission Planning Software',
     'Perception Systems',
     'Sovereign Defence Platform',
@@ -85,6 +84,7 @@ const websiteSchema = {
 }
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://rudraas.com'),
   applicationName: 'Rudraas Dynamics',
   title: {
     default: 'Rudraas Dynamics | Indian Defence Technology & AI Autonomy',
@@ -100,7 +100,6 @@ export const metadata: Metadata = {
     'unmanned systems India',
     'sovereign defence platform',
     'Indo-Pacific defence',
-    'iDEX defence startup',
     'Indian military technology',
     'defence tech startup India',
     'Rudraas Dynamics',

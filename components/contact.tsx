@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 export function Contact() {
   const [email, setEmail] = useState('')
@@ -14,9 +15,8 @@ export function Contact() {
   }
 
   const channels = [
-    { label: 'DIRECT', value: 'info@rudraas.com' },
-    { label: 'GOVERNMENT', value: 'ks@rudraas.com' },
-    { label: 'CAPITAL', value: 'msu@rudraas.com' },
+    { label: 'PROGRAMME', value: 'programme@rudraas.in', note: 'Armed forces, development partnerships, programme enquiries' },
+    { label: 'GENERAL', value: 'info@rudraas.com', note: 'Media, press, and general enquiries' },
   ]
 
   return (
@@ -25,18 +25,22 @@ export function Contact() {
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
           {/* Left content */}
           <div>
-            <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block">
+            <span className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-8 block rd-enter-1">
               // 006 — BRIEF REQUEST
             </span>
 
-            <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-12 leading-tight">
-              Operational.<br />Disciplined.<br />Confidential.
+            <h2 className="font-[family-name:var(--font-space-grotesk)] text-3xl md:text-4xl lg:text-5xl font-medium text-[#F2EFE6] mb-4 leading-tight rd-enter-2">
+              Operational.<br />Disciplined.<br />Direct.
             </h2>
 
+            <p className="text-[#D5D6D8] font-normal text-sm leading-relaxed mb-12 rd-enter-3">
+              For programme, government, capital, partnership, and media enquiries.
+            </p>
+
             {/* Form */}
-            <form onSubmit={handleSubmit} className="mb-12">
+            <form onSubmit={handleSubmit} className="mb-12 rd-enter-4">
               <label htmlFor="channel" className="block font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-3">
-                // CHANNEL
+                EMAIL ADDRESS
               </label>
               {submitted ? (
                 <p className="text-[#D5D6D8] font-mono text-sm tracking-wider py-4">
@@ -64,32 +68,54 @@ export function Contact() {
             </form>
 
             {/* Channels */}
-            <address className="not-italic grid sm:grid-cols-3 gap-6">
+            <address className="not-italic grid sm:grid-cols-2 gap-6">
               {channels.map((channel) => (
-                <div key={channel.label} className="border-l border-[#2a3344] pl-4">
-                  <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">
-                    // {channel.label}
+                <div key={channel.label} className="border-l border-[#2a3344] pl-4 hover:border-[#6A6E78] transition-colors duration-200">
+                  <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-1 block">
+                    {channel.label}
                   </span>
                   <a
                     href={`mailto:${channel.value}`}
-                    className="text-sm text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors"
+                    className="text-sm text-[#D5D6D8] hover:text-[#F2EFE6] transition-colors block mb-1"
                   >
                     {channel.value}
                   </a>
+                  <span className="text-xs text-[#6A6E78] leading-relaxed">
+                    {channel.note}
+                  </span>
                 </div>
               ))}
             </address>
           </div>
 
           {/* Right content */}
-          <div className="hidden lg:flex items-center justify-center">
-            <div className="relative w-64 h-64 opacity-20">
-              <Image
-                src="/images/rudraas-emblem.png"
-                alt=""
-                fill
-                className="object-contain"
-              />
+          <div className="hidden lg:flex flex-col justify-center gap-10">
+            <p className="font-[family-name:var(--font-space-grotesk)] text-xl md:text-2xl font-medium text-[#F2EFE6] leading-snug">
+              Designed in India.<br />Engineered for the allied world.
+            </p>
+            <div className="border-l border-[#2a3344] pl-8">
+              <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">OPERATING BASE</span>
+              <p className="text-[#D5D6D8] font-normal leading-relaxed">
+                Delhi NCR, India
+              </p>
+            </div>
+            <div className="border-l border-[#2a3344] pl-8">
+              <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">ENGAGEMENTS</span>
+              <p className="text-[#D5D6D8] font-normal leading-relaxed">
+                Indian and allied defence requirements
+              </p>
+            </div>
+            <div className="border-l border-[#2a3344] pl-8">
+              <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">POSTURE</span>
+              <p className="text-[#D5D6D8] font-normal leading-relaxed">
+                Sovereign by construction<br />Allied-ready by design
+              </p>
+            </div>
+            <div className="border-l border-[#2a3344] pl-8">
+              <span className="font-mono text-[10px] tracking-[0.2em] text-[#6A6E78] uppercase mb-2 block">RESPONSE</span>
+              <p className="text-[#D5D6D8] font-normal leading-relaxed">
+                Direct review of relevant enquiries
+              </p>
             </div>
           </div>
         </div>
@@ -100,14 +126,14 @@ export function Contact() {
 
 export function Footer() {
   const surfaces = [
-    { label: 'CAPABILITY', href: '#capability' },
-    { label: 'THESIS', href: '#doctrine' },
-    { label: 'SOVEREIGN', href: '#sovereign' },
-    { label: 'CAREERS', href: '#careers' },
+    { label: 'CAPABILITY', href: '/capabilities' },
+    { label: 'THESIS', href: '/mission' },
+    { label: 'SOVEREIGN', href: '/sovereign' },
+    { label: 'CAREERS', href: '/careers' },
   ]
 
   const channels = [
-    { label: 'BRIEF', href: '#contact' },
+    { label: 'BRIEF', href: '/contact' },
     { label: 'GOVERNMENT', href: 'mailto:ks@rudraas.com' },
     { label: 'CAPITAL', href: 'mailto:msu@rudraas.com' },
     { label: 'PRESS', href: 'mailto:info@rudraas.com' },
@@ -144,12 +170,12 @@ export function Footer() {
             <ul className="space-y-2">
               {surfaces.map((item) => (
                 <li key={item.label}>
-                  <a
+                  <Link
                     href={item.href}
                     className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
                   >
                     // {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -163,12 +189,21 @@ export function Footer() {
             <ul className="space-y-2">
               {channels.map((item) => (
                 <li key={item.label}>
-                  <a
-                    href={item.href}
-                    className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
-                  >
-                    // {item.label}
-                  </a>
+                  {item.href.startsWith('mailto:') ? (
+                    <a
+                      href={item.href}
+                      className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
+                    >
+                      // {item.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className="font-mono text-xs tracking-wider text-[#6A6E78] hover:text-[#D5D6D8] transition-colors"
+                    >
+                      // {item.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
@@ -179,7 +214,6 @@ export function Footer() {
         <div className="pt-8 border-t border-[#1a2233] flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] tracking-wider text-[#6A6E78] uppercase">
             <span className="font-medium text-[#D5D6D8]">R-DYN-WEB-26.05</span>
-            <span>CLASSIFIED · DISTRIBUTION CONTROLLED</span>
           </div>
           <div className="flex flex-wrap items-center gap-4 font-mono text-[10px] tracking-wider text-[#6A6E78] uppercase">
             <span>NEW DELHI · INDIA</span>
