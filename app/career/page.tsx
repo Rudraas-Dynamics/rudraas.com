@@ -44,7 +44,8 @@ export default async function CareerPage({
   searchParams: Promise<CareerSearchParams>
 }) {
   const params = await searchParams
-  const page = params.page ? Number(params.page) : 1
+  const parsedPage = params.page ? Number(params.page) : 1
+  const page = Number.isFinite(parsedPage) && parsedPage > 0 ? Math.floor(parsedPage) : 1
 
   const [{ data: jobs, meta }, filters] = await Promise.all([
     getPublicJobs({
