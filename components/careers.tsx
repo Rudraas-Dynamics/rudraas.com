@@ -88,13 +88,22 @@ export function Careers() {
         </div>
 
         {/* CTA */}
-        <a
-          href="/contact"
-          className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-colors duration-200"
-        >
-          SUBMIT WORK
-          <span className="transition-transform group-hover:translate-x-1">→</span>
-        </a>
+        <div className="flex flex-wrap items-center gap-6">
+          <a
+            href="/career"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-[#F2EFE6] text-[#050912] text-sm tracking-widest uppercase font-medium hover:bg-[#D5D6D8] transition-colors duration-200"
+          >
+            SUBMIT WORK
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </a>
+          <a
+            href="/career"
+            className="group inline-flex items-center gap-2 text-[#D5D6D8] text-sm tracking-widest uppercase font-medium hover:text-[#F2EFE6] transition-colors duration-200"
+          >
+            View Open Positions
+            <span className="transition-transform group-hover:translate-x-1">→</span>
+          </a>
+        </div>
       </div>
     </section>
   )

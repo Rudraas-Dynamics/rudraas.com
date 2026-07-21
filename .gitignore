@@ -12,5 +12,21 @@ __v0_jsx-dev-runtime.ts
 # Common ignores
 node_modules
 .next/
-.DS_Storetsconfig.tsbuildinfo
-tsconfig.tsbuildinfo
+.DS_Store
+*.tsbuildinfo
+
+# ---- Careers Portal ----
+careers-portal/backend/dist/
+careers-portal/backend/coverage/
+careers-portal/admin-frontend/dist/
+
+# Real env files (only .env.example* are tracked)
+.env
+.env.local
+careers-portal/backend/.env
+careers-portal/admin-frontend/.env
+
+# TLS material mounted into the edge nginx container - never committed
+infra/nginx/certs/*
+!infra/nginx/certs/.gitkeep
+!infra/nginx/certs/README.md

@@ -1,0 +1,94 @@
+@import '@fontsource/space-grotesk/400.css';
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/500.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme: off-white (#F2EFE6-tinted) background, dark navy (#050912) as primary/text */
+    --background: 45 32% 94%;
+    --foreground: 222 56% 5%;
+
+    --card: 45 25% 97%;
+    --card-foreground: 222 56% 5%;
+
+    --popover: 45 25% 97%;
+    --popover-foreground: 222 56% 5%;
+
+    --primary: 222 56% 5%;
+    --primary-foreground: 45 40% 97%;
+
+    --secondary: 45 15% 88%;
+    --secondary-foreground: 222 56% 5%;
+
+    --muted: 45 12% 90%;
+    --muted-foreground: 223 6% 44%;
+
+    --accent: 45 15% 86%;
+    --accent-foreground: 222 56% 5%;
+
+    --destructive: 0 72% 42%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 15% 85%;
+    --input: 220 15% 85%;
+    --ring: 222 56% 5%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Dark theme: exact brand tokens */
+    --background: 222 56% 5%;
+    --foreground: 45 32% 92%;
+
+    --card: 220 35% 8%;
+    --card-foreground: 45 32% 92%;
+
+    --popover: 220 35% 8%;
+    --popover-foreground: 45 32% 92%;
+
+    --primary: 45 32% 92%;
+    --primary-foreground: 222 56% 5%;
+
+    --secondary: 219 24% 22%;
+    --secondary-foreground: 45 32% 92%;
+
+    --muted: 219 24% 14%;
+    --muted-foreground: 223 6% 44%;
+
+    --accent: 219 20% 18%;
+    --accent-foreground: 45 32% 92%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 219 24% 22%;
+    --input: 219 24% 22%;
+    --ring: 45 32% 92%;
+
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    color-scheme: light dark;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
