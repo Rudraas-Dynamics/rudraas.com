@@ -1,0 +1,154 @@
+# Docker Compose stack for the Rudraas Careers Portal (career-api,
+# career-admin, and their backing services). The main Next.js marketing site
+# at the repo root is deployed separately on Vercel and is NOT part of this
+# stack - see docs/DEPLOYMENT.md.
+#
+# Local/dev usage:
+#   docker compose up -d mongo minio clamav
+#   docker compose run --rm career-api npm run seed
+#   docker compose up -d career-api career-admin nginx
+#
+# Env vars used directly by this file come from a root-level `.env`
+# (see .env.example). career-api additionally loads its own
+# careers-portal/backend/.env (see careers-portal/backend/.env.example).
+
+networks:
+  career-net:
+    name: career-net
+
+volumes:
+  mongo-data:
+  minio-data:
+  clamav-data:
+
+services:
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+      - ./infra/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    networks:
+      - career-net
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  minio:
+    image: minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    volumes:
+      - minio-data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - career-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  # One-shot job: waits for minio to be healthy, then idempotently creates
+  # the resume-storage bucket, then exits. Safe to re-run on every
+  # `docker compose up` - `mc mb -p` is a no-op if the bucket already exists.
+  minio-init:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    networks:
+      - career-net
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD" &&
+        mc mb -p local/rudraas-career-resumes &&
+        echo "bucket ready"
+
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes:
+      - clamav-data:/var/lib/clamav
+    networks:
+      - career-net
+    # No host port published: only career-api (on the internal network)
+    # needs to reach clamd on 3310.
+    healthcheck:
+      test: ["CMD-SHELL", "clamdcheck.sh || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 90s
+
+  career-api:
+    build:
+      context: ./careers-portal/backend
+    restart: unless-stopped
+    env_file:
+      - ./careers-portal/backend/.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      # ClamAV's virus DB can take a couple of minutes to load on first
+      # boot. Gating career-api startup on clamav's healthcheck would make
+      # every fresh `docker compose up` slow to become usable, so we only
+      # require the container to have *started*, not to be fully healthy.
+      # If clamd isn't ready yet by the time career-api starts scanning
+      # uploads, set VIRUS_SCAN_ENABLED=false in careers-portal/backend/.env
+      # for local dev until clamav reports healthy.
+      clamav:
+        condition: service_started
+    # Published for local dev convenience only (e.g. hitting the API
+    # directly while the admin frontend isn't running yet). In a hardened
+    # production compose override, remove this `ports:` mapping entirely -
+    # career-api should only be reachable through the `nginx` service on
+    # the internal career-net network.
+    ports:
+      - "4000:4000"
+    networks:
+      - career-net
+
+  career-admin:
+    build:
+      context: ./careers-portal/admin-frontend
+      args:
+        VITE_API_BASE_URL: ${ADMIN_API_BASE_URL}
+    restart: unless-stopped
+    networks:
+      - career-net
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - career-api
+      - career-admin
+    volumes:
+      - ./infra/nginx:/etc/nginx/conf.d:ro
+      # Real TLS cert/key get placed here out-of-band (e.g. via certbot on
+      # the host) - see docs/DEPLOYMENT.md. Not managed by this compose file.
+      - ./infra/nginx/certs:/etc/nginx/certs:ro
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - career-net

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model, PipelineStage, Types } from 'mongoose';
 import { Workbook } from 'exceljs';
 import { Candidate, CandidateDocument } from '@/database/schemas/candidate.schema';
 import { Job, JobDocument } from '@/database/schemas/job.schema';
@@ -130,17 +130,20 @@ export class ExportService {
       };
     }
 
-    const pipeline: Record<string, unknown>[] = [{ $match: match }];
+    // Dynamic, conditionally-built pipeline: stages are pushed as `unknown` and cast back to
+    // PipelineStage because their shapes (computed $project fields, $facet-free $lookup/$unwind)
+    // vary across branches and don't correspond to a single narrow PipelineStage member.
+    const pipeline: PipelineStage[] = [{ $match: match } as unknown as PipelineStage];
 
     pipeline.push({
       $lookup: { from: this.jobModel.collection.collectionName, localField: 'opening', foreignField: '_id', as: 'job' },
-    });
-    pipeline.push({ $unwind: { path: '$job', preserveNullAndEmptyArrays: true } });
+    } as unknown as PipelineStage);
+    pipeline.push({ $unwind: { path: '$job', preserveNullAndEmptyArrays: true } } as unknown as PipelineStage);
 
     if (filters.department) {
       pipeline.push({
         $match: { 'job.department': new RegExp(escapeRegExp(filters.department), 'i') },
-      });
+      } as unknown as PipelineStage);
     }
 
     // Explicit allow-list projection: aggregation bypasses the schema's `select:false` on
@@ -180,9 +183,9 @@ export class ExportService {
         createdAt: 1,
         updatedAt: 1,
       },
-    });
+    } as unknown as PipelineStage);
 
-    pipeline.push({ $sort: { createdAt: -1 } });
+    pipeline.push({ $sort: { createdAt: -1 } } as unknown as PipelineStage);
 
     const rows = await this.candidateModel.aggregate<ApplicationExportRow>(pipeline);
 

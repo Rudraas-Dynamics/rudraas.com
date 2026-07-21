@@ -56,7 +56,7 @@ export class SearchService {
         .limit(RESULT_LIMIT)
         .select('name email isActive')
         .lean(),
-      this.jobModel.distinct('department', { department: regex }),
+      this.jobModel.distinct('department', { department: regex }) as unknown as Promise<string[]>,
     ]);
 
     return {
