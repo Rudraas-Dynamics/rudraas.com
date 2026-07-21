@@ -20,7 +20,7 @@ export function Header() {
     { label: 'Capability', href: '/capabilities' },
     { label: 'Mission', href: '/mission' },
     { label: 'Sovereign', href: '/sovereign' },
-    { label: 'Careers', href: '/careers' },
+    { label: 'Careers', href: '/career' },
     { label: 'Brief', href: '/contact' },
   ]
 
