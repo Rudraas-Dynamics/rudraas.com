@@ -33,3 +33,21 @@ components/   → page sections (Hero, Header, Careers, Contact…)
 components/ui → reusable UI primitives
 public/       → static assets & images
 ```
+
+## Careers Portal
+
+This repo also hosts the source for the **Careers Portal**, a separately
+deployed system (`career.rudraas.com`) that the `/career` and `/career/:slug`
+pages above integrate with:
+
+```text
+careers-portal/backend/         → NestJS REST API (career.rudraas.com/api)
+careers-portal/admin-frontend/  → HR/Admin dashboard SPA (career.rudraas.com)
+infra/                          → nginx configs, Mongo init script
+docker-compose.yml              → local/self-hosted orchestration
+docs/                           → architecture, database, RBAC, security,
+                                   and deployment documentation
+```
+
+See `docs/ARCHITECTURE.md` for the full system design and
+`docs/DEPLOYMENT.md` for how to run or deploy it.
