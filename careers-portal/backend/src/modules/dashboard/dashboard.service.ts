@@ -136,7 +136,10 @@ export class DashboardService {
         {
           $facet: {
             totalApplications: [{ $count: 'count' }],
-            todaysApplications: [{ $match: { createdAt: { $gte: startOfToday } } }, { $count: 'count' }],
+            todaysApplications: [
+              { $match: { createdAt: { $gte: startOfToday } } },
+              { $count: 'count' },
+            ],
             applicationsThisMonth: [
               { $match: { createdAt: { $gte: startOfMonth } } },
               { $count: 'count' },

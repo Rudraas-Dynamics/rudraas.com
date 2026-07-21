@@ -40,7 +40,9 @@ export class AuthService {
   ) {}
 
   async login(dto: { email: string; password: string }, meta: RequestMeta): Promise<AuthResult> {
-    const user = await this.userModel.findOne({ email: dto.email.toLowerCase() }).select('+passwordHash');
+    const user = await this.userModel
+      .findOne({ email: dto.email.toLowerCase() })
+      .select('+passwordHash');
 
     // Same generic message and audit outcome regardless of which check fails
     // (unknown email, inactive account, wrong password) to avoid user enumeration.
@@ -69,7 +71,10 @@ export class AuthService {
     await user.save();
 
     const { accessToken, expiresIn } = this.signAccessToken(user);
-    const { raw: refreshToken, expiresAt: refreshExpiresAt } = await this.issueRefreshToken(user._id, meta);
+    const { raw: refreshToken, expiresAt: refreshExpiresAt } = await this.issueRefreshToken(
+      user._id,
+      meta,
+    );
     const csrfToken = this.generateCsrfToken();
 
     await this.auditLogService.record({
@@ -123,10 +128,11 @@ export class AuthService {
       throw new UnauthorizedException('Account is no longer active');
     }
 
-    const { raw: newRefreshToken, expiresAt: refreshExpiresAt, doc: newTokenDoc } = await this.issueRefreshToken(
-      user._id,
-      meta,
-    );
+    const {
+      raw: newRefreshToken,
+      expiresAt: refreshExpiresAt,
+      doc: newTokenDoc,
+    } = await this.issueRefreshToken(user._id, meta);
 
     tokenDoc.revoked = true;
     tokenDoc.replacedBy = newTokenDoc._id;
@@ -161,7 +167,10 @@ export class AuthService {
   ): Promise<void> {
     if (rawRefreshToken) {
       const tokenHash = this.hashToken(rawRefreshToken);
-      await this.refreshTokenModel.updateOne({ tokenHash, revoked: false }, { $set: { revoked: true } });
+      await this.refreshTokenModel.updateOne(
+        { tokenHash, revoked: false },
+        { $set: { revoked: true } },
+      );
     }
 
     await this.auditLogService.record({

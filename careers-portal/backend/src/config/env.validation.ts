@@ -1,5 +1,12 @@
 import { plainToInstance } from 'class-transformer';
-import { IsBooleanString, IsIn, IsNumberString, IsOptional, IsString, validateSync } from 'class-validator';
+import {
+  IsBooleanString,
+  IsIn,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  validateSync,
+} from 'class-validator';
 
 class EnvironmentVariables {
   @IsIn(['development', 'production', 'test'])
@@ -106,9 +113,7 @@ export function validateEnv(config: Record<string, unknown>) {
   const errors = validateSync(validatedConfig, { skipMissingProperties: false });
 
   if (errors.length > 0) {
-    const messages = errors
-      .map((e) => Object.values(e.constraints ?? {}).join(', '))
-      .join('; ');
+    const messages = errors.map((e) => Object.values(e.constraints ?? {}).join(', ')).join('; ');
     throw new Error(`Environment validation failed: ${messages}`);
   }
   return validatedConfig;

@@ -29,7 +29,9 @@ export class JobsController {
   // being captured as a slug value.
   @Get('public/filters')
   @Public()
-  @ApiOperation({ summary: 'Distinct department/location/employment-type values for the public filter UI' })
+  @ApiOperation({
+    summary: 'Distinct department/location/employment-type values for the public filter UI',
+  })
   getPublicFilters() {
     return this.jobsService.getPublicFilters();
   }
@@ -85,7 +87,10 @@ export class JobsController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Delete a job opening (HR only); blocked if any candidate has applied' })
   @ApiParam({ name: 'id' })
-  remove(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  remove(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.jobsService.remove(id, currentUser);
   }
 
@@ -94,7 +99,10 @@ export class JobsController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Publish a job opening to the public career site (HR only)' })
   @ApiParam({ name: 'id' })
-  publish(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  publish(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.jobsService.publish(id, currentUser);
   }
 
@@ -103,16 +111,24 @@ export class JobsController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Close a job opening to new applications (HR only)' })
   @ApiParam({ name: 'id' })
-  close(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  close(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.jobsService.close(id, currentUser);
   }
 
   @Patch(':id/archive')
   @Roles(Role.HR)
   @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Archive a job opening, retiring it from the public career site (HR only)' })
+  @ApiOperation({
+    summary: 'Archive a job opening, retiring it from the public career site (HR only)',
+  })
   @ApiParam({ name: 'id' })
-  archive(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  archive(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.jobsService.archive(id, currentUser);
   }
 
@@ -134,7 +150,10 @@ export class JobsController {
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Duplicate a job opening as a new unpublished draft (HR only)' })
   @ApiParam({ name: 'id' })
-  duplicate(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  duplicate(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.jobsService.duplicate(id, currentUser);
   }
 }

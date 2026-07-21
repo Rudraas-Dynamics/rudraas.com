@@ -41,7 +41,10 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.set('toJSON', {
   virtuals: true,
-  transform: (_doc, ret: Record<string, unknown>) => {
+  // `ret` is intentionally untyped: Mongoose's own toJSON transform type for this schema
+  // has no string index signature, so a `Record<string, unknown>` annotation here doesn't
+  // type-check against it — the transform only needs to strip two known keys regardless.
+  transform: (_doc, ret: any) => {
     delete ret.passwordHash;
     delete ret.__v;
     return ret;

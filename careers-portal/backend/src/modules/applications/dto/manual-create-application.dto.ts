@@ -8,7 +8,9 @@ import { CandidateSource } from '@/common/constants/enums';
  * `source` is required here (no WEBSITE default makes sense for manual entry) and
  * `sourceDetail` lets HR record who/what actually sourced the candidate.
  */
-export class ManualCreateApplicationDto extends OmitType(CreateApplicationDto, ['source'] as const) {
+export class ManualCreateApplicationDto extends OmitType(CreateApplicationDto, [
+  'source',
+] as const) {
   @ApiProperty({ enum: CandidateSource })
   @IsEnum(CandidateSource)
   source: CandidateSource;

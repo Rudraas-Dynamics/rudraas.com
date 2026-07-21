@@ -1,4 +1,9 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types } from 'mongoose';
 import slugify from 'slugify';
@@ -45,7 +50,9 @@ export class JobsService {
 
   private assertValidExperienceRange(minYears: number, maxYears: number): void {
     if (maxYears < minYears) {
-      throw new BadRequestException('experience.maxYears must be greater than or equal to experience.minYears');
+      throw new BadRequestException(
+        'experience.maxYears must be greater than or equal to experience.minYears',
+      );
     }
   }
 
@@ -106,7 +113,12 @@ export class JobsService {
 
     if (query.search) {
       const regex = this.buildSearchRegex(query.search);
-      filter.$or = [{ title: regex }, { department: regex }, { location: regex }, { skills: regex }];
+      filter.$or = [
+        { title: regex },
+        { department: regex },
+        { location: regex },
+        { skills: regex },
+      ];
     }
 
     const sort = this.buildSort(query.sortBy, query.sortOrder, { createdAt: -1 });
@@ -124,7 +136,10 @@ export class JobsService {
       this.jobModel.countDocuments(filter),
     ]);
 
-    return { data: data as unknown as Job[], meta: buildPaginationMeta(query.page, query.limit, total) };
+    return {
+      data: data as unknown as Job[],
+      meta: buildPaginationMeta(query.page, query.limit, total),
+    };
   }
 
   async findOneForBackoffice(id: Types.ObjectId): Promise<JobDocument> {
@@ -149,7 +164,12 @@ export class JobsService {
 
     if (query.search) {
       const regex = this.buildSearchRegex(query.search);
-      filter.$or = [{ title: regex }, { department: regex }, { location: regex }, { skills: regex }];
+      filter.$or = [
+        { title: regex },
+        { department: regex },
+        { location: regex },
+        { skills: regex },
+      ];
     }
 
     // Range-overlap: a job qualifies if the candidate's stated band intersects the job's band.
@@ -187,7 +207,11 @@ export class JobsService {
   }
 
   async getPublicFilters(): Promise<PublicFilterOptions> {
-    const activeFilter: FilterQuery<JobDocument> = { isPublished: true, isClosed: false, isArchived: false };
+    const activeFilter: FilterQuery<JobDocument> = {
+      isPublished: true,
+      isClosed: false,
+      isArchived: false,
+    };
     const [departments, locations] = await Promise.all([
       this.jobModel.distinct('department', activeFilter),
       this.jobModel.distinct('location', activeFilter),
@@ -200,7 +224,11 @@ export class JobsService {
     };
   }
 
-  async update(id: Types.ObjectId, dto: UpdateJobDto, currentUser: AuthenticatedUser): Promise<JobDocument> {
+  async update(
+    id: Types.ObjectId,
+    dto: UpdateJobDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<JobDocument> {
     const job = await this.jobModel.findById(id);
     if (!job) throw new NotFoundException('Job opening not found');
 
@@ -230,11 +258,13 @@ export class JobsService {
     if (dto.employmentType !== undefined) applyChange('employmentType', dto.employmentType);
     if (dto.experience !== undefined) applyChange('experience', dto.experience);
     if (dto.skills !== undefined) applyChange('skills', dto.skills);
-    if (dto.description !== undefined) applyChange('description', sanitizeRichText(dto.description));
+    if (dto.description !== undefined)
+      applyChange('description', sanitizeRichText(dto.description));
     if (dto.responsibilities !== undefined) {
       applyChange('responsibilities', sanitizeRichText(dto.responsibilities));
     }
-    if (dto.requirements !== undefined) applyChange('requirements', sanitizeRichText(dto.requirements));
+    if (dto.requirements !== undefined)
+      applyChange('requirements', sanitizeRichText(dto.requirements));
     if (dto.budget !== undefined) applyChange('budget', dto.budget);
     if (dto.jdAttachment !== undefined) applyChange('jdAttachment', dto.jdAttachment);
     if (dto.openingDate !== undefined) applyChange('openingDate', new Date(dto.openingDate));
@@ -338,7 +368,11 @@ export class JobsService {
     return job;
   }
 
-  async setUrgent(id: Types.ObjectId, dto: SetUrgentDto, currentUser: AuthenticatedUser): Promise<JobDocument> {
+  async setUrgent(
+    id: Types.ObjectId,
+    dto: SetUrgentDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<JobDocument> {
     const job = await this.jobModel.findById(id);
     if (!job) throw new NotFoundException('Job opening not found');
 

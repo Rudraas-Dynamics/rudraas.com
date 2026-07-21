@@ -10,7 +10,10 @@ export interface HrNewApplicationData {
   applicationId: string;
 }
 
-export function hrNewApplicationTemplate(data: HrNewApplicationData): { subject: string; html: string } {
+export function hrNewApplicationTemplate(data: HrNewApplicationData): {
+  subject: string;
+  html: string;
+} {
   const link = `${data.adminBaseUrl}/applications/${data.applicationId}`;
   const body = `
     <p>A new application has been received for <strong>${data.jobTitle}</strong>.</p>

@@ -15,10 +15,14 @@ export class LoggingInterceptor implements NestInterceptor {
       tap({
         next: () => {
           const response = context.switchToHttp().getResponse();
-          this.logger.log(`${method} ${originalUrl} ${response.statusCode} +${Date.now() - start}ms`);
+          this.logger.log(
+            `${method} ${originalUrl} ${response.statusCode} +${Date.now() - start}ms`,
+          );
         },
         error: (err) => {
-          this.logger.warn(`${method} ${originalUrl} FAILED +${Date.now() - start}ms: ${err.message}`);
+          this.logger.warn(
+            `${method} ${originalUrl} FAILED +${Date.now() - start}ms: ${err.message}`,
+          );
         },
       }),
     );

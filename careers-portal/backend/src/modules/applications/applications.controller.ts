@@ -45,7 +45,10 @@ export class ApplicationsController {
   @ApiOperation({ summary: 'Submit a job application (public career site)' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
-    FileInterceptor('resume', { storage: memoryStorage(), limits: { fileSize: RESUME_MAX_SIZE_BYTES } }),
+    FileInterceptor('resume', {
+      storage: memoryStorage(),
+      limits: { fileSize: RESUME_MAX_SIZE_BYTES },
+    }),
   )
   async create(@Body() dto: CreateApplicationDto, @UploadedFile() file: Express.Multer.File) {
     return this.applicationsService.create(dto, file);
@@ -57,7 +60,10 @@ export class ApplicationsController {
   @ApiOperation({ summary: 'Manually record a candidate application (HR only)' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
-    FileInterceptor('resume', { storage: memoryStorage(), limits: { fileSize: RESUME_MAX_SIZE_BYTES } }),
+    FileInterceptor('resume', {
+      storage: memoryStorage(),
+      limits: { fileSize: RESUME_MAX_SIZE_BYTES },
+    }),
   )
   async createManual(
     @Body() dto: ManualCreateApplicationDto,
@@ -101,7 +107,10 @@ export class ApplicationsController {
   @Post('bulk/status')
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Bulk-update the status of multiple applications' })
-  async bulkUpdateStatus(@Body() dto: BulkStatusUpdateDto, @CurrentUser() currentUser: AuthenticatedUser) {
+  async bulkUpdateStatus(
+    @Body() dto: BulkStatusUpdateDto,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     return this.applicationsService.bulkUpdateStatus(dto, currentUser);
   }
 
@@ -114,7 +123,10 @@ export class ApplicationsController {
     @CurrentUser() currentUser: AuthenticatedUser,
     @Res({ passthrough: false }) res: Response,
   ): Promise<void> {
-    const { stream, fileName } = await this.applicationsService.bulkDownloadResumesZip(dto, currentUser);
+    const { stream, fileName } = await this.applicationsService.bulkDownloadResumesZip(
+      dto,
+      currentUser,
+    );
     res.set({
       'Content-Type': 'application/zip',
       'Content-Disposition': `attachment; filename="${fileName}"`,
@@ -180,7 +192,10 @@ export class ApplicationsController {
   @Delete(':id')
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Permanently delete an application (Admin only)' })
-  async remove(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() currentUser: AuthenticatedUser) {
+  async remove(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() currentUser: AuthenticatedUser,
+  ) {
     await this.applicationsService.remove(id, currentUser);
     return { message: 'Application deleted successfully' };
   }

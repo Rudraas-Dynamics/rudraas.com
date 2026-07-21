@@ -12,7 +12,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserQueryDto } from './dto/user-query.dto';
 
 const BCRYPT_ROUNDS = 12;
-const SORTABLE_FIELDS = ['name', 'email', 'role', 'isActive', 'createdAt', 'updatedAt', 'lastLoginAt'];
+const SORTABLE_FIELDS = [
+  'name',
+  'email',
+  'role',
+  'isActive',
+  'createdAt',
+  'updatedAt',
+  'lastLoginAt',
+];
 
 interface UserSnapshot {
   name: string;
@@ -41,7 +49,8 @@ export class UsersService {
       filter.$or = [{ name: pattern }, { email: pattern }];
     }
 
-    const sortField = query.sortBy && SORTABLE_FIELDS.includes(query.sortBy) ? query.sortBy : 'createdAt';
+    const sortField =
+      query.sortBy && SORTABLE_FIELDS.includes(query.sortBy) ? query.sortBy : 'createdAt';
     const sort: Record<string, 1 | -1> = { [sortField]: query.sortOrder === 'asc' ? 1 : -1 };
     const skip = (query.page - 1) * query.limit;
 

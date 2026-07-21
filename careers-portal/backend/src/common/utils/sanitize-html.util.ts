@@ -4,7 +4,20 @@ import sanitizeHtml from 'sanitize-html';
 export function sanitizeRichText(input: string): string {
   return sanitizeHtml(input, {
     allowedTags: [
-      'p', 'br', 'strong', 'em', 'u', 's', 'ul', 'ol', 'li', 'h3', 'h4', 'blockquote', 'a', 'span',
+      'p',
+      'br',
+      'strong',
+      'em',
+      'u',
+      's',
+      'ul',
+      'ol',
+      'li',
+      'h3',
+      'h4',
+      'blockquote',
+      'a',
+      'span',
     ],
     allowedAttributes: {
       a: ['href', 'target', 'rel'],

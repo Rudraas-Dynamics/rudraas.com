@@ -52,18 +52,29 @@ export class EmailService implements OnModuleInit {
     }
   }
 
-  async sendCandidateAcknowledgement(to: string, data: CandidateAcknowledgementData): Promise<void> {
+  async sendCandidateAcknowledgement(
+    to: string,
+    data: CandidateAcknowledgementData,
+  ): Promise<void> {
     const { subject, html } = candidateAcknowledgementTemplate(data);
     await this.send(to, subject, html);
   }
 
   async sendHrNewApplicationAlert(data: Omit<HrNewApplicationData, 'adminBaseUrl'>): Promise<void> {
-    const { subject, html } = hrNewApplicationTemplate({ ...data, adminBaseUrl: this.adminBaseUrl });
+    const { subject, html } = hrNewApplicationTemplate({
+      ...data,
+      adminBaseUrl: this.adminBaseUrl,
+    });
     await this.send(this.hrEmails, subject, html);
   }
 
-  async sendAdminUrgentOpeningAlert(data: Omit<AdminUrgentOpeningData, 'adminBaseUrl'>): Promise<void> {
-    const { subject, html } = adminUrgentOpeningTemplate({ ...data, adminBaseUrl: this.adminBaseUrl });
+  async sendAdminUrgentOpeningAlert(
+    data: Omit<AdminUrgentOpeningData, 'adminBaseUrl'>,
+  ): Promise<void> {
+    const { subject, html } = adminUrgentOpeningTemplate({
+      ...data,
+      adminBaseUrl: this.adminBaseUrl,
+    });
     await this.send(this.adminEmails, subject, html);
   }
 }

@@ -21,6 +21,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import {
   Select,
   SelectContent,
@@ -585,7 +586,7 @@ export default function JobDetailPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <FormLabel>JD attachment</FormLabel>
+                  <Label>JD attachment</Label>
                   {attachment ? (
                     <div className="flex flex-wrap items-center gap-2 text-sm">
                       <a

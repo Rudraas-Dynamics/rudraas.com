@@ -62,28 +62,40 @@ export class ApplicationExportFilterDto {
   @Min(0)
   experienceMax?: number;
 
-  @ApiPropertyOptional({ minimum: 0, description: 'Best-effort filter parsed from free-text expectedCtc' })
+  @ApiPropertyOptional({
+    minimum: 0,
+    description: 'Best-effort filter parsed from free-text expectedCtc',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
   expectedCtcMin?: number;
 
-  @ApiPropertyOptional({ minimum: 0, description: 'Best-effort filter parsed from free-text expectedCtc' })
+  @ApiPropertyOptional({
+    minimum: 0,
+    description: 'Best-effort filter parsed from free-text expectedCtc',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
   expectedCtcMax?: number;
 
-  @ApiPropertyOptional({ minimum: 0, description: 'Best-effort filter parsed from free-text currentCtc' })
+  @ApiPropertyOptional({
+    minimum: 0,
+    description: 'Best-effort filter parsed from free-text currentCtc',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   @Min(0)
   currentCtcMin?: number;
 
-  @ApiPropertyOptional({ minimum: 0, description: 'Best-effort filter parsed from free-text currentCtc' })
+  @ApiPropertyOptional({
+    minimum: 0,
+    description: 'Best-effort filter parsed from free-text currentCtc',
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()

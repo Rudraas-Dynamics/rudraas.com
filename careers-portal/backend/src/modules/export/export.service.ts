@@ -98,10 +98,12 @@ export class ExportService {
     }
 
     const buffer = await workbook.xlsx.writeBuffer();
-    return buffer as Buffer;
+    return Buffer.from(buffer);
   }
 
-  private async queryExportRows(filters: ApplicationExportFilterDto): Promise<ApplicationExportRow[]> {
+  private async queryExportRows(
+    filters: ApplicationExportFilterDto,
+  ): Promise<ApplicationExportRow[]> {
     const match: Record<string, unknown> = {};
 
     if (filters.opening) {
@@ -136,9 +138,16 @@ export class ExportService {
     const pipeline: PipelineStage[] = [{ $match: match } as unknown as PipelineStage];
 
     pipeline.push({
-      $lookup: { from: this.jobModel.collection.collectionName, localField: 'opening', foreignField: '_id', as: 'job' },
+      $lookup: {
+        from: this.jobModel.collection.collectionName,
+        localField: 'opening',
+        foreignField: '_id',
+        as: 'job',
+      },
     } as unknown as PipelineStage);
-    pipeline.push({ $unwind: { path: '$job', preserveNullAndEmptyArrays: true } } as unknown as PipelineStage);
+    pipeline.push({
+      $unwind: { path: '$job', preserveNullAndEmptyArrays: true },
+    } as unknown as PipelineStage);
 
     if (filters.department) {
       pipeline.push({

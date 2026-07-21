@@ -1,5 +1,14 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsEmail, IsEnum, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmail,
+  IsEnum,
+  IsOptional,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
 import { PASSWORD_MIN_LENGTH, Role } from '@/common/constants/enums';
 import { PASSWORD_STRENGTH_MESSAGE, PASSWORD_STRENGTH_REGEX } from './create-user.dto';
 
@@ -25,7 +34,10 @@ export class UpdateUserDto {
   @IsBoolean()
   isActive?: boolean;
 
-  @ApiPropertyOptional({ minLength: PASSWORD_MIN_LENGTH, description: 'Set to reset the user password' })
+  @ApiPropertyOptional({
+    minLength: PASSWORD_MIN_LENGTH,
+    description: 'Set to reset the user password',
+  })
   @IsOptional()
   @IsString()
   @MinLength(PASSWORD_MIN_LENGTH)

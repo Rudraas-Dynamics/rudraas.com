@@ -88,7 +88,11 @@ export class UploadService {
       return;
     }
 
-    const response = await this.runClamavInstream(buffer, virusScan.clamavHost, virusScan.clamavPort);
+    const response = await this.runClamavInstream(
+      buffer,
+      virusScan.clamavHost,
+      virusScan.clamavPort,
+    );
 
     if (response.includes('FOUND')) {
       throw new BadRequestException('Resume failed a virus scan and was rejected');
@@ -132,7 +136,10 @@ export class UploadService {
         socket.write('zINSTREAM\0');
 
         for (let offset = 0; offset < buffer.length; offset += CLAMAV_CHUNK_SIZE) {
-          const chunk = buffer.subarray(offset, Math.min(offset + CLAMAV_CHUNK_SIZE, buffer.length));
+          const chunk = buffer.subarray(
+            offset,
+            Math.min(offset + CLAMAV_CHUNK_SIZE, buffer.length),
+          );
           const sizeHeader = Buffer.alloc(4);
           sizeHeader.writeUInt32BE(chunk.length, 0);
           socket.write(sizeHeader);
@@ -244,7 +251,10 @@ export class UploadService {
   private sanitizeFileName(originalName: string): string {
     const extension = extname(originalName).replace(/[^a-zA-Z0-9.]/g, '');
     const base = originalName.slice(0, originalName.length - extname(originalName).length);
-    const safeBase = base.replace(/[^a-zA-Z0-9_-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    const safeBase = base
+      .replace(/[^a-zA-Z0-9_-]+/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
     return `${safeBase || 'file'}${extension}`;
   }
 }

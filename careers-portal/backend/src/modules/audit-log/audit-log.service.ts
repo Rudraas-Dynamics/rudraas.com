@@ -10,8 +10,11 @@ export interface RecordAuditLogParams {
   action: AuditAction;
   entityType: AuditEntityType;
   entityId?: string | Types.ObjectId | null;
-  before?: Record<string, unknown> | null;
-  after?: Record<string, unknown> | null;
+  // Callers pass Mongoose documents (`.toObject()`), typed snapshot interfaces, or plain
+  // object literals — none of which necessarily carry a string index signature, so this is
+  // intentionally loose; the schema field itself is a Mongoose `Mixed` type.
+  before?: unknown;
+  after?: unknown;
   ip?: string | null;
   userAgent?: string | null;
 }
@@ -75,7 +78,10 @@ export class AuditLogService {
       this.model.countDocuments(filter),
     ]);
 
-    return { data: data as unknown as AuditLog[], meta: buildPaginationMeta(query.page, query.limit, total) };
+    return {
+      data: data as unknown as AuditLog[],
+      meta: buildPaginationMeta(query.page, query.limit, total),
+    };
   }
 
   async findByEntity(entityType: AuditEntityType, entityId: string) {

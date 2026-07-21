@@ -1,4 +1,10 @@
-import { BadRequestException, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
+import {
+  BadRequestException,
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { memoryStorage } from 'multer';
@@ -17,13 +23,17 @@ export class UploadController {
   @ApiOperation({ summary: 'Upload a job description attachment (HR only)' })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
-    FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: RESUME_MAX_SIZE_BYTES } }),
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: RESUME_MAX_SIZE_BYTES },
+    }),
   )
   async uploadJobAttachment(@UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('file is required');
     }
-    const { url, fileName, mimeType, sizeBytes } = await this.uploadService.uploadJobAttachment(file);
+    const { url, fileName, mimeType, sizeBytes } =
+      await this.uploadService.uploadJobAttachment(file);
     return { url, fileName, mimeType, sizeBytes };
   }
 }

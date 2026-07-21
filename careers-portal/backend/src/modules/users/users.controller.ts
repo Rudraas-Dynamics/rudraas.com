@@ -41,13 +41,19 @@ export class UsersController {
 
   @Delete(':id')
   @ApiOperation({ summary: 'Deactivate a user account (soft delete, Admin only)' })
-  deactivate(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() actor: AuthenticatedUser) {
+  deactivate(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() actor: AuthenticatedUser,
+  ) {
     return this.usersService.deactivate(id, actor);
   }
 
   @Patch(':id/activate')
   @ApiOperation({ summary: 'Reactivate a previously deactivated user account (Admin only)' })
-  activate(@Param('id', ParseObjectIdPipe) id: Types.ObjectId, @CurrentUser() actor: AuthenticatedUser) {
+  activate(
+    @Param('id', ParseObjectIdPipe) id: Types.ObjectId,
+    @CurrentUser() actor: AuthenticatedUser,
+  ) {
     return this.usersService.activate(id, actor);
   }
 }

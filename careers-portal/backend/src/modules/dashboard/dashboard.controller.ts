@@ -20,7 +20,9 @@ export class DashboardController {
 
   @Get('hr')
   @Roles(Role.HR)
-  @ApiOperation({ summary: 'HR overview dashboard: assigned openings, pipeline and screening status' })
+  @ApiOperation({
+    summary: 'HR overview dashboard: assigned openings, pipeline and screening status',
+  })
   getHrDashboard(@CurrentUser() currentUser: AuthenticatedUser) {
     return this.dashboardService.getHrDashboard(currentUser);
   }

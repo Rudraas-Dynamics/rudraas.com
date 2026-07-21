@@ -71,4 +71,4 @@ async function bootstrap() {
   logger.log(`Career API listening on port ${port} [${config.get('env')}]`);
 }
 
-bootstrap();
+void bootstrap();

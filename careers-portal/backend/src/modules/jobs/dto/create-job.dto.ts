@@ -66,7 +66,10 @@ export class CreateJobDto {
   @MaxLength(200)
   budget?: string;
 
-  @ApiPropertyOptional({ type: JobAttachmentDto, description: 'Set from the Upload module response' })
+  @ApiPropertyOptional({
+    type: JobAttachmentDto,
+    description: 'Set from the Upload module response',
+  })
   @IsOptional()
   @ValidateNested()
   @Type(() => JobAttachmentDto)

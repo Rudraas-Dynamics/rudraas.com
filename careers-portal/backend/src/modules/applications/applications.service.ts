@@ -1,10 +1,20 @@
-import { BadRequestException, ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, Types } from 'mongoose';
 import { PassThrough, Readable } from 'stream';
 import archiver from 'archiver';
 import { Candidate, CandidateDocument } from '@/database/schemas/candidate.schema';
-import type { ActivityLogEntry, InternalNote, StatusHistoryEntry } from '@/database/schemas/candidate.schema';
+import type {
+  ActivityLogEntry,
+  InternalNote,
+  StatusHistoryEntry,
+} from '@/database/schemas/candidate.schema';
 import { Job, JobDocument } from '@/database/schemas/job.schema';
 import { AuditLogService } from '@/modules/audit-log/audit-log.service';
 import { UploadService } from '@/modules/upload/upload.service';
@@ -14,7 +24,12 @@ import { ApplicationExportFilterDto } from '@/modules/export/dto/export-filter.d
 import { AuthenticatedUser } from '@/common/decorators/current-user.decorator';
 import { stripHtml } from '@/common/utils/sanitize-html.util';
 import { buildPaginationMeta, Paginated } from '@/common/dto/pagination-query.dto';
-import { AuditAction, AuditEntityType, ApplicationStatus, CandidateSource } from '@/common/constants/enums';
+import {
+  AuditAction,
+  AuditEntityType,
+  ApplicationStatus,
+  CandidateSource,
+} from '@/common/constants/enums';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { ManualCreateApplicationDto } from './dto/manual-create-application.dto';
 import { ApplicationQueryDto } from './dto/application-query.dto';
@@ -24,7 +39,13 @@ import { AddNoteDto } from './dto/add-note.dto';
 import { BulkStatusUpdateDto } from './dto/bulk-status-update.dto';
 import { BulkDownloadDto } from './dto/bulk-download.dto';
 
-const ALLOWED_SORT_FIELDS = new Set(['createdAt', 'updatedAt', 'experienceYears', 'name', 'status']);
+const ALLOWED_SORT_FIELDS = new Set([
+  'createdAt',
+  'updatedAt',
+  'experienceYears',
+  'name',
+  'status',
+]);
 
 interface CreateApplicationParams {
   dto: CreateApplicationDto;
@@ -48,7 +69,10 @@ export class ApplicationsService {
     private readonly exportService: ExportService,
   ) {}
 
-  async create(dto: CreateApplicationDto, file: Express.Multer.File | undefined): Promise<CandidateDocument> {
+  async create(
+    dto: CreateApplicationDto,
+    file: Express.Multer.File | undefined,
+  ): Promise<CandidateDocument> {
     return this.createApplication({
       dto,
       file,
@@ -88,7 +112,9 @@ export class ApplicationsService {
     const email = dto.email.toLowerCase().trim();
     const duplicate = await this.candidateModel.exists({ opening: job._id, email });
     if (duplicate) {
-      throw new ConflictException('An application already exists for this email against this opening');
+      throw new ConflictException(
+        'An application already exists for this email against this opening',
+      );
     }
 
     if (!file) {
@@ -201,7 +227,8 @@ export class ApplicationsService {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const skip = (page - 1) * limit;
-    const sortField = query.sortBy && ALLOWED_SORT_FIELDS.has(query.sortBy) ? query.sortBy : 'createdAt';
+    const sortField =
+      query.sortBy && ALLOWED_SORT_FIELDS.has(query.sortBy) ? query.sortBy : 'createdAt';
     const sortOrder = query.sortOrder === 'asc' ? 1 : -1;
 
     const [data, total] = await Promise.all([
@@ -273,7 +300,10 @@ export class ApplicationsService {
     return candidate;
   }
 
-  async bulkUpdateStatus(dto: BulkStatusUpdateDto, currentUser: AuthenticatedUser): Promise<{ updated: number }> {
+  async bulkUpdateStatus(
+    dto: BulkStatusUpdateDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<{ updated: number }> {
     const changedBy = new Types.ObjectId(currentUser.userId);
     const objectIds = dto.ids.map((id) => new Types.ObjectId(id));
 
@@ -325,7 +355,8 @@ export class ApplicationsService {
 
     for (const [key, value] of Object.entries(dto)) {
       if (value === undefined) continue;
-      const nextValue = freeTextFields.has(key) && typeof value === 'string' ? stripHtml(value) : value;
+      const nextValue =
+        freeTextFields.has(key) && typeof value === 'string' ? stripHtml(value) : value;
       if (candidateRecord[key] !== nextValue) {
         before[key] = candidateRecord[key];
         after[key] = nextValue;
@@ -352,7 +383,11 @@ export class ApplicationsService {
     return candidate;
   }
 
-  async addNote(id: Types.ObjectId, dto: AddNoteDto, currentUser: AuthenticatedUser): Promise<CandidateDocument> {
+  async addNote(
+    id: Types.ObjectId,
+    dto: AddNoteDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<CandidateDocument> {
     const candidate = await this.candidateModel.findById(id);
     if (!candidate) {
       throw new NotFoundException('Application not found');
@@ -458,7 +493,10 @@ export class ApplicationsService {
     return { stream: output, fileName: 'resumes.zip' };
   }
 
-  async exportToExcel(filters: ApplicationExportFilterDto, currentUser: AuthenticatedUser): Promise<Buffer> {
+  async exportToExcel(
+    filters: ApplicationExportFilterDto,
+    currentUser: AuthenticatedUser,
+  ): Promise<Buffer> {
     const buffer = await this.exportService.generateApplicationsExcel(filters);
 
     await this.auditLogService.record({
