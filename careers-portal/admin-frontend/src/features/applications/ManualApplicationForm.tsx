@@ -59,7 +59,9 @@ const manualApplicationSchema = z.object({
     'OTHER',
   ]),
   sourceDetail: z.string().optional(),
-  consentGiven: z.literal(true, { errorMap: () => ({ message: 'Candidate consent is required' }) }),
+  consentGiven: z.boolean().refine((value) => value === true, {
+    message: 'Candidate consent is required',
+  }),
   resume: z.instanceof(File, { message: 'Resume is required' }),
 })
 
@@ -83,6 +85,7 @@ const defaultValues: Partial<ManualApplicationFormValues> = {
   preferredLocation: '',
   introduction: '',
   sourceDetail: '',
+  consentGiven: false,
 }
 
 interface ManualApplicationFormProps {
