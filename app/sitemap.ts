@@ -3,10 +3,16 @@ import { getPublicJobs } from '@/lib/career-api'
 
 async function getCareerRoutes(): Promise<MetadataRoute.Sitemap> {
   try {
-    const { data: jobs } = await getPublicJobs({ page: 1, limit: 200 })
+    // API caps `limit` at 50, so walk the pages.
+    const jobs = []
+    for (let page = 1; page <= 20; page++) {
+      const res = await getPublicJobs({ page, limit: 50 })
+      jobs.push(...res.data)
+      if (!res.meta.hasNextPage) break
+    }
     return jobs.map((job) => ({
       url: `https://rudraas.com/career/${job.slug}`,
-      lastModified: new Date(job.createdAt),
+      lastModified: new Date(job.publishedAt),
       changeFrequency: 'weekly' as const,
       priority: 0.8,
     }))

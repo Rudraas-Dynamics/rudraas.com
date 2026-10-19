@@ -5,12 +5,10 @@ import { Header } from '@/components/header'
 import { Footer } from '@/components/contact'
 import { Badge } from '@/components/ui/badge'
 import { ApplicationForm } from '@/components/career/application-form'
+import { JobText } from '@/components/career/job-text'
 import { getPublicJobBySlug } from '@/lib/career-api'
+import { collapseWhitespace, safeJsonLd } from '@/lib/job-text'
 import { formatEmploymentType, formatExperienceRange } from '@/lib/career-format'
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
-}
 
 export async function generateMetadata({
   params,
@@ -24,7 +22,7 @@ export async function generateMetadata({
     return { title: 'Position Not Found' }
   }
 
-  const excerpt = job.description ? stripHtml(job.description).slice(0, 155) : undefined
+  const excerpt = job.description ? collapseWhitespace(job.description).slice(0, 155) : undefined
 
   return {
     title: `${job.title} — Rudraas Dynamics Careers`,
@@ -44,14 +42,14 @@ export default async function CareerDetailPage({
     notFound()
   }
 
-  const datePosted = job.openingDate ?? job.createdAt
+  const datePosted = job.openingDate ?? job.publishedAt
   const locality = job.location.split(',')[0]?.trim() || job.location
 
   const jobPostingSchema = {
     '@context': 'https://schema.org',
     '@type': 'JobPosting',
     title: job.title,
-    description: job.description ?? job.title,
+    description: job.description ? collapseWhitespace(job.description) : job.title,
     datePosted,
     ...(job.closingDate ? { validThrough: job.closingDate } : {}),
     employmentType: job.employmentType,
@@ -70,12 +68,12 @@ export default async function CareerDetailPage({
         addressCountry: 'IN',
       },
     },
-    ...(job.budget
+    ...(job.salaryRange
       ? {
           baseSalary: {
             '@type': 'MonetaryAmount',
             currency: 'INR',
-            value: { '@type': 'QuantitativeValue', value: job.budget },
+            value: { '@type': 'QuantitativeValue', value: job.salaryRange },
           },
         }
       : {}),
@@ -85,7 +83,7 @@ export default async function CareerDetailPage({
     <main className="bg-[#050912] min-h-screen">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingSchema) }}
+        dangerouslySetInnerHTML={{ __html: safeJsonLd(jobPostingSchema) }}
       />
       <Header />
 
@@ -137,11 +135,11 @@ export default async function CareerDetailPage({
               {formatEmploymentType(job.employmentType)}
             </Badge>
             <Badge variant="outline" className="border-[#2a3344] text-[#D5D6D8] font-mono text-[10px] tracking-wider uppercase">
-              {formatExperienceRange(job.experience.minYears, job.experience.maxYears)} experience
+              {formatExperienceRange(job.experienceMinYears, job.experienceMaxYears)} experience
             </Badge>
-            {job.budget && (
+            {job.salaryRange && (
               <Badge variant="outline" className="border-[#2a3344] text-[#D5D6D8] font-mono text-[10px] tracking-wider uppercase">
-                {job.budget}
+                {job.salaryRange}
               </Badge>
             )}
           </div>
@@ -176,7 +174,7 @@ export default async function CareerDetailPage({
               <h2 className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-4">
                 // ABOUT THE ROLE
               </h2>
-              <div className="job-prose" dangerouslySetInnerHTML={{ __html: job.description }} />
+              <JobText text={job.description} />
             </div>
           )}
 
@@ -185,34 +183,19 @@ export default async function CareerDetailPage({
               <h2 className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-4">
                 // RESPONSIBILITIES
               </h2>
-              <div className="job-prose" dangerouslySetInnerHTML={{ __html: job.responsibilities }} />
+              <JobText text={job.responsibilities} />
             </div>
           )}
 
           {job.requirements && (
-            <div className="mb-12">
+            <div className="mb-16">
               <h2 className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-4">
                 // REQUIREMENTS
               </h2>
-              <div className="job-prose" dangerouslySetInnerHTML={{ __html: job.requirements }} />
+              <JobText text={job.requirements} />
             </div>
           )}
 
-          {job.jdAttachment && (
-            <div className="mb-16">
-              <h2 className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-4">
-                // JOB DESCRIPTION
-              </h2>
-              <a
-                href={job.jdAttachment.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-6 py-3 border border-[#2a3344] text-[#D5D6D8] font-mono text-xs tracking-wider uppercase hover:border-[#D5D6D8] hover:text-[#F2EFE6] transition-colors"
-              >
-                Download {job.jdAttachment.fileName} ↓
-              </a>
-            </div>
-          )}
 
           <div className="mb-8">
             <Link
@@ -233,7 +216,7 @@ export default async function CareerDetailPage({
           <h2 className="font-[family-name:var(--font-space-grotesk)] text-2xl md:text-3xl font-medium text-[#F2EFE6] mb-10 leading-tight">
             Apply for {job.title}
           </h2>
-          <ApplicationForm jobId={job._id} jobTitle={job.title} />
+          <ApplicationForm jobId={job.id} jobTitle={job.title} />
         </div>
       </section>
 

@@ -34,9 +34,20 @@ components/ui → reusable UI primitives
 public/       → static assets & images
 ```
 
-## Careers Portal
+## Careers (HRMS-backed)
 
-This repo also hosts the source for the **Careers Portal**, a separately
+The public `/career` and `/career/:slug` pages read from the Rudraas HRMS
+public careers API (`GET /jobs`, `/jobs/filters`, `/jobs/:slug`,
+`POST /applications`). Set `NEXT_PUBLIC_CAREER_API_BASE_URL` to
+`https://<hrms-host>/api/public/careers` (see `.env.example`), and add this
+site's origin to the HRMS `CAREERS_ALLOWED_ORIGINS`. Pages use ISR, so jobs
+refresh within ~60s of being published/unpublished. Run unit tests with
+`npm test`.
+
+## Legacy Careers Portal (superseded)
+
+The legacy Careers Portal below is superseded by the HRMS Recruitment module
+and is no longer used by the website. This repo still hosts the source for the **Careers Portal**, a separately
 deployed system (`career.rudraas.com`) that the `/career` and `/career/:slug`
 pages above integrate with:
 

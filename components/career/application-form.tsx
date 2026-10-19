@@ -26,6 +26,15 @@ const ACCEPTED_RESUME_TYPES = [
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 ]
 
+const MAX_SUPPORTING_FILES = 3
+const ACCEPTED_SUPPORTING_TYPES = [...ACCEPTED_RESUME_TYPES, 'image/png', 'image/jpeg']
+
+const FORM_FIELDS = [
+  'name', 'email', 'mobile', 'linkedin', 'portfolio', 'currentCompany', 'designation',
+  'experienceYears', 'qualification', 'currentCtc', 'expectedCtc', 'noticePeriod',
+  'currentLocation', 'preferredLocation', 'introduction', 'consentGiven', 'resume', 'supporting',
+] as const
+
 const applicationSchema = z.object({
   name: z.string().min(2, 'Enter your full name'),
   email: z.string().email('Enter a valid email address'),
@@ -39,6 +48,7 @@ const applicationSchema = z.object({
   designation: z.string().optional(),
   experienceYears: z.coerce
     .number({ message: 'Enter years of experience' })
+    .int('Enter a whole number of years')
     .min(0, 'Cannot be negative')
     .max(60, 'Enter a realistic number of years'),
   qualification: z.string().min(2, 'Enter your highest qualification'),
@@ -61,6 +71,24 @@ const applicationSchema = z.object({
       if (!file) return false
       return ACCEPTED_RESUME_TYPES.includes(file.type) || /\.(pdf|docx?|DOC|DOCX)$/i.test(file.name)
     }, 'Resume must be a PDF, DOC, or DOCX file'),
+  supporting: z
+    .custom<FileList | undefined>(
+      (value) => value === undefined || value === null || value instanceof FileList,
+    )
+    .refine((files) => !files || files.length <= MAX_SUPPORTING_FILES, 'Attach at most 3 supporting files')
+    .refine(
+      (files) => !files || Array.from(files).every((f) => f.size <= MAX_FILE_SIZE),
+      'Each supporting file must be 10MB or smaller',
+    )
+    .refine(
+      (files) =>
+        !files ||
+        Array.from(files).every(
+          (f) => ACCEPTED_SUPPORTING_TYPES.includes(f.type) || /\.(pdf|docx?|png|jpe?g)$/i.test(f.name),
+        ),
+      'Supporting files must be PDF, DOC, DOCX, PNG or JPEG',
+    )
+    .optional(),
 })
 
 type ApplicationFormValues = z.infer<typeof applicationSchema>
@@ -97,7 +125,7 @@ export function ApplicationForm({ jobId, jobTitle }: { jobId: string; jobTitle: 
     setSubmitting(true)
     try {
       await submitApplication({
-        openingId: jobId,
+        jobId,
         name: values.name,
         email: values.email,
         mobile: values.mobile,
@@ -115,13 +143,26 @@ export function ApplicationForm({ jobId, jobTitle }: { jobId: string; jobTitle: 
         introduction: values.introduction || undefined,
         consentGiven: values.consentGiven,
         resume: values.resume[0],
+        supporting: values.supporting ? Array.from(values.supporting) : undefined,
       })
       setSubmitted(true)
     } catch (err) {
-      if (err instanceof ApplicationSubmitError && err.statusCode === 409) {
-        form.setError('email', { type: 'manual', message: err.message })
-      } else if (err instanceof ApplicationSubmitError) {
-        setFormError(err.message)
+      if (err instanceof ApplicationSubmitError) {
+        let mapped = false
+        for (const [key, messages] of Object.entries(err.fields ?? {})) {
+          const field = (FORM_FIELDS as readonly string[]).includes(key) ? key : null
+          if (field && messages?.length) {
+            form.setError(field as (typeof FORM_FIELDS)[number], { type: 'server', message: messages.join(' ') })
+            mapped = true
+          }
+        }
+        if (err.statusCode === 409) {
+          form.setError('email', { type: 'server', message: err.message })
+        } else if (err.statusCode === 422 && mapped) {
+          setFormError('Please correct the highlighted fields and try again.')
+        } else {
+          setFormError(err.message)
+        }
       } else {
         setFormError('Something went wrong submitting your application. Please try again.')
       }
@@ -268,7 +309,7 @@ export function ApplicationForm({ jobId, jobTitle }: { jobId: string; jobTitle: 
                 <FormItem>
                   <FormLabel className={labelClass}>Years of Experience *</FormLabel>
                   <FormControl>
-                    <Input type="number" min={0} max={60} step="0.5" {...field} className={inputClass} />
+                    <Input type="number" min={0} max={60} step="1" {...field} className={inputClass} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -394,6 +435,32 @@ export function ApplicationForm({ jobId, jobTitle }: { jobId: string; jobTitle: 
                     ref={ref}
                     onBlur={onBlur}
                     onChange={(e) => onChange(e.target.files)}
+                    className={cn(inputClass, 'cursor-pointer')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <h4 className="font-mono text-xs tracking-[0.2em] text-[#6A6E78] uppercase mb-4">// SUPPORTING DOCUMENTS</h4>
+          <FormField
+            control={form.control}
+            name="supporting"
+            render={({ field: { onChange, onBlur, name, ref } }) => (
+              <FormItem>
+                <FormLabel className={labelClass}>Optional — up to 3 files: PDF, DOC, DOCX, PNG or JPEG, max 10MB each</FormLabel>
+                <FormControl>
+                  <Input
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                    name={name}
+                    ref={ref}
+                    onBlur={onBlur}
+                    onChange={(e) => onChange(e.target.files && e.target.files.length > 0 ? e.target.files : undefined)}
                     className={cn(inputClass, 'cursor-pointer')}
                   />
                 </FormControl>

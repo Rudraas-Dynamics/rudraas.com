@@ -28,8 +28,18 @@ for Production (and Preview, if career pages should work in preview
 deployments too):
 
 ```
-NEXT_PUBLIC_CAREER_API_BASE_URL=https://career.rudraas.com/api/v1
+NEXT_PUBLIC_CAREER_API_BASE_URL=https://<hrms-host>/api/public/careers
 ```
+
+> **Update:** the public Careers pages now read from the Rudraas HRMS
+> (Recruitment module), not the legacy `careers-portal` API. The value above
+> must be the HRMS public careers API (no trailing slash), and the HRMS must
+> include this site's origin (e.g. `https://rudraas.com`) in its
+> `CAREERS_ALLOWED_ORIGINS` so browser application submissions pass CORS.
+> Job pages use ISR (`revalidate` 60s; filters 300s), so publishing or
+> unpublishing a job in the HRMS shows up on the site within ~60 seconds.
+> The `careers-portal/` stack described in the rest of this guide is
+> superseded by the HRMS Recruitment module.
 
 Redeploy (or let the next push trigger a deploy) after adding it.
 

@@ -57,8 +57,6 @@ export default async function CareerPage({
       experienceMax: params.experienceMax,
       page,
       limit: 12,
-      sortBy: 'createdAt',
-      sortOrder: 'desc',
     }),
     getPublicJobFilters(),
   ])
@@ -92,7 +90,7 @@ export default async function CareerPage({
             <div className="flex flex-wrap gap-x-6 gap-y-2">
               {urgentJobs.map((job) => (
                 <Link
-                  key={job._id}
+                  key={job.id}
                   href={`/career/${job.slug}`}
                   className="text-sm text-[#D5D6D8] hover:text-[#F2EFE6] underline underline-offset-4 decoration-[#6A6E78] transition-colors"
                 >
@@ -133,7 +131,7 @@ export default async function CareerPage({
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
               {jobs.map((job) => (
-                <OpeningCard key={job._id} job={job} />
+                <OpeningCard key={job.id} job={job} />
               ))}
             </div>
           )}

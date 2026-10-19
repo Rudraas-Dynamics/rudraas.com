@@ -1,30 +1,27 @@
 export type EmploymentType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'INTERNSHIP' | 'FREELANCE'
 
-export interface JobAttachment {
-  url: string
-  fileName: string
-  mimeType: string
-  sizeBytes: number
-}
-
 export interface PublicJob {
-  _id: string
-  title: string
+  id: string
   slug: string
+  title: string
   department: string
   location: string
   employmentType: EmploymentType
-  experience: { minYears: number; maxYears: number }
+  experienceMinYears: number
+  experienceMaxYears: number
   skills: string[]
-  budget: string | null
+  salaryRange: string | null
   isUrgent: boolean
   openingDate: string | null
   closingDate: string | null
-  createdAt: string
-  description?: string
-  responsibilities?: string
-  requirements?: string
-  jdAttachment?: JobAttachment | null
+  publishedAt: string
+}
+
+/** Detail view: plain-text long-form fields (possibly empty strings). */
+export interface PublicJobDetail extends PublicJob {
+  description: string
+  responsibilities: string
+  requirements: string
 }
 
 export interface PaginationMeta {
@@ -42,27 +39,27 @@ export interface JobFilters {
   employmentTypes: EmploymentType[]
 }
 
-interface ApiSuccess<T> {
-  success: true
-  data: T
-  meta?: PaginationMeta
-}
-
-interface ApiError {
-  success: false
-  statusCode: number
-  message: string | string[]
-  path: string
-  timestamp: string
+/** Error envelope: `{ success:false, error:{ code, message, fields? } }` */
+export interface ApiErrorBody {
+  success?: false
+  error?: {
+    code?: string
+    message?: string
+    fields?: Record<string, string[]>
+  }
 }
 
 export class CareerApiError extends Error {
   statusCode: number
+  code?: string
+  fields?: Record<string, string[]>
 
-  constructor(message: string, statusCode: number) {
+  constructor(message: string, statusCode: number, code?: string, fields?: Record<string, string[]>) {
     super(message)
     this.name = 'CareerApiError'
     this.statusCode = statusCode
+    this.code = code
+    this.fields = fields
   }
 }
 
@@ -73,7 +70,7 @@ function getBaseUrl(): string {
       'NEXT_PUBLIC_CAREER_API_BASE_URL is not set — configure it in .env.local (see .env.example)',
     )
   }
-  return base.replace(/\/$/, '')
+  return base.replace(/\/+$/, '')
 }
 
 function buildQueryString(params: Record<string, string | number | undefined>): string {
@@ -86,54 +83,47 @@ function buildQueryString(params: Record<string, string | number | undefined>): 
   return qs ? `?${qs}` : ''
 }
 
-async function readErrorMessage(res: Response): Promise<string> {
+async function readError(res: Response): Promise<CareerApiError> {
+  let message = res.statusText || `Request failed with status ${res.status}`
+  let code: string | undefined
+  let fields: Record<string, string[]> | undefined
   try {
-    const body = (await res.json()) as ApiError
-    if (Array.isArray(body.message)) return body.message.join(', ')
-    if (body.message) return body.message
+    const body = (await res.json()) as ApiErrorBody
+    if (body?.error?.message) message = body.error.message
+    code = body?.error?.code
+    fields = body?.error?.fields
   } catch {
-    // response wasn't JSON, fall through
+    // response wasn't JSON, keep the default message
   }
-  return res.statusText || `Request failed with status ${res.status}`
+  return new CareerApiError(message, res.status, code, fields)
 }
 
 export async function getPublicJobs(
   params: Record<string, string | number | undefined>,
 ): Promise<{ data: PublicJob[]; meta: PaginationMeta }> {
   const base = getBaseUrl()
-  const res = await fetch(`${base}/jobs/public${buildQueryString(params)}`, {
+  const res = await fetch(`${base}/jobs${buildQueryString(params)}`, {
     next: { revalidate: 60 },
   })
-  if (!res.ok) {
-    throw new CareerApiError(await readErrorMessage(res), res.status)
-  }
-  const body = (await res.json()) as ApiSuccess<PublicJob[]>
-  return { data: body.data, meta: body.meta as PaginationMeta }
+  if (!res.ok) throw await readError(res)
+  return (await res.json()) as { data: PublicJob[]; meta: PaginationMeta }
 }
 
 export async function getPublicJobFilters(): Promise<JobFilters> {
   const base = getBaseUrl()
-  const res = await fetch(`${base}/jobs/public/filters`, {
+  const res = await fetch(`${base}/jobs/filters`, {
     next: { revalidate: 300 },
   })
-  if (!res.ok) {
-    throw new CareerApiError(await readErrorMessage(res), res.status)
-  }
-  const body = (await res.json()) as ApiSuccess<JobFilters>
-  return body.data
+  if (!res.ok) throw await readError(res)
+  return (await res.json()) as JobFilters
 }
 
-export async function getPublicJobBySlug(slug: string): Promise<PublicJob | null> {
+export async function getPublicJobBySlug(slug: string): Promise<PublicJobDetail | null> {
   const base = getBaseUrl()
-  const res = await fetch(`${base}/jobs/public/${encodeURIComponent(slug)}`, {
+  const res = await fetch(`${base}/jobs/${encodeURIComponent(slug)}`, {
     next: { revalidate: 60 },
   })
-  if (res.status === 404) {
-    return null
-  }
-  if (!res.ok) {
-    throw new CareerApiError(await readErrorMessage(res), res.status)
-  }
-  const body = (await res.json()) as ApiSuccess<PublicJob>
-  return body.data
+  if (res.status === 404) return null
+  if (!res.ok) throw await readError(res)
+  return (await res.json()) as PublicJobDetail
 }

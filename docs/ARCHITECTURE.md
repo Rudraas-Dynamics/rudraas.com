@@ -1,5 +1,7 @@
 # Rudraas Careers Portal — System Architecture
 
+> **Superseded:** the website's `/career` pages now consume the Rudraas HRMS public careers API (`NEXT_PUBLIC_CAREER_API_BASE_URL=https://<hrms-host>/api/public/careers`). The endpoints below (`/jobs/public/*`) describe the legacy portal only.
+
 ## 1. Systems overview
 
 The Careers Portal is a second, independently-deployed product that integrates

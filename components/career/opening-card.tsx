@@ -7,7 +7,7 @@ import type { PublicJob } from '@/lib/career-api'
 import { formatEmploymentType, formatExperienceRange } from '@/lib/career-format'
 
 export function OpeningCard({ job }: { job: PublicJob }) {
-  const postedAt = job.openingDate ?? job.createdAt
+  const postedAt = job.openingDate ?? job.publishedAt
 
   return (
     <Card className="border-[#2a3344] bg-[#0a1019] hover:border-[#6A6E78] transition-colors duration-200">
@@ -35,7 +35,7 @@ export function OpeningCard({ job }: { job: PublicJob }) {
             {job.location}
           </Badge>
           <Badge variant="outline" className="border-[#2a3344] text-[#D5D6D8] font-mono text-[10px] tracking-wider uppercase">
-            {formatExperienceRange(job.experience.minYears, job.experience.maxYears)}
+            {formatExperienceRange(job.experienceMinYears, job.experienceMaxYears)}
           </Badge>
         </div>
 
